@@ -1,0 +1,53 @@
+---
+
+# Set up Docker on Linux
+# https://github.com/geerlingguy/ansible-role-docker
+- name: Configure Docker for Linux
+  hosts: dbservers
+  become: yes
+
+  vars:
+    pip_package: python3-pip
+    pip_install_packages:
+      - name: docker
+
+  roles:
+    - geerlingguy.pip
+    - geerlingguy.docker
+
+- name: RavenDB Server
+  hosts: dbservers
+  become: yes
+
+  tasks:
+    - name: Copy Node A configuration
+      copy:
+        src: ./settings.json
+        dest: /var/db_config/settings.json
+
+    - name: Copy Node A administrator cert
+      copy:
+        src: ./cluster.server.certificate.pfx
+        dest: /var/db_cert/
+
+    - name: Copy client cert to trust
+      copy:
+        src: ./admin.client.certificate.pfx
+        dest: /var/db_cert/
+
+    - name: Run RavenDB container
+      docker_container:
+        name: ravendb
+        image: ravendb/ravendb:4.1-ubuntu-latest
+        restart_policy: on-failure
+        restart_retries: 10
+        published_ports:
+          - 8081:8080
+          - 38889:38888
+        env:
+          RAVEN_Security_Certificate_Path: "/opt/RavenDB/cert/cluster.server.certificate.pfx"
+          RAVEN_ARGS: "-c /opt/RavenDB/config/settings.json --Setup.Mode=None --ServerUrl=https://172.17.0.2:8080"
+        volumes:
+          - /var/db:/opt/RavenDB/Server/RavenData
+          - /var/db_config:/opt/RavenDB/config
+          - /var/db_cert:/opt/RavenDB/cert
