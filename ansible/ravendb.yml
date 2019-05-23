@@ -38,7 +38,7 @@
     - name: Run RavenDB container
       docker_container:
         name: ravendb
-        image: ravendb/ravendb:4.1-ubuntu-latest
+        image: ravendb/ravendb:4.2-ubuntu-latest
         restart_policy: on-failure
         restart_retries: 10
         published_ports:
