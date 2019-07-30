@@ -25,6 +25,8 @@
         src: ./settings.json
         dest: /var/db_config/settings.json
 
+    # May want to not overwrite if it exists
+    # in case it gets auto-renewed
     - name: Copy Node A administrator cert
       copy:
         src: ./cluster.server.certificate.pfx
@@ -45,8 +47,7 @@
           - 8081:8080
           - 38889:38888
         env:
-          RAVEN_Security_Certificate_Path: "/opt/RavenDB/cert/cluster.server.certificate.pfx"
-          RAVEN_ARGS: "-c /opt/RavenDB/config/settings.json --Setup.Mode=None --ServerUrl=https://172.17.0.2:8080"
+          RAVEN_ARGS: "-c /opt/RavenDB/config/settings.json"
         volumes:
           - /var/db:/opt/RavenDB/Server/RavenData
           - /var/db_config:/opt/RavenDB/config

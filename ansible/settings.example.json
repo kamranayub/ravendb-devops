@@ -1,0 +1,12 @@
+{
+  "Setup.Mode": "LetsEncrypt",
+  "Security.UnsecuredAccessAllowed": "PrivateNetwork",
+  "License.Eula.Accepted": true,
+  "Security.Certificate.LetsEncrypt.Email": "<email>",
+  "Security.Certificate.Path": "/opt/RavenDB/cert/cluster.server.certificate.pfx",
+  "ServerUrl": "https://172.17.0.2:8080",
+  "ServerUrl.Tcp": "tcp://172.17.0.2:38888",
+  "ExternalIp": "<external IP>",
+  "PublicServerUrl": "https://<dns>:8081",
+  "PublicServerUrl.Tcp": "tcp://<dns>:38889"
+}
